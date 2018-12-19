@@ -255,6 +255,7 @@ form button {
       renderTodo = (todo, index) => {    
         return (
       <div class="todolist">
+        <br />
           <li key={index}>
             &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 
             <input type="checkbox" className="put"/>
@@ -294,12 +295,30 @@ form button {
     const container = document.getElementsByClassName('todo-list-container')[0];
     ReactDOM.render(<TodoListComponent />, container);
     </script>
+    <br/><br/>
     <h1>
       Todo List
       <span>🤓 👩‍💻 🦄 🔻</span>
     </h1>
+    <!-- Contenido TODO LIST-->
     <div class="todo-list-container">
 
+    </div>
+
+    <div>
+      <!-- Footer -->
+      <footer class="page-footer font-small green darken-3">
+      <br/><br/><br/><br/>
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">
+            <p>Diseñada por: Calypso Bronte
+                </p>
+            <p>De LATAM con el  💙 para el 🌍 </p>
+        </div>
+        <!-- Copyright -->
+  
+      </footer>
+      <!-- Footer -->
     </div>
   </body>
 </html>
