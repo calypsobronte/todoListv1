@@ -1,17 +1,34 @@
 {
-  "name": "nodejs-upb",
+  "name": "todolist",
   "version": "1.0.0",
-  "description": "taller nodejs + react upb",
+  "description": "Reto 3 - Diciembre 18 platzi, el Grinch",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
-  },
-  "author": "nodeco",
-  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "nodemon": "^1.18.7"
-  }
+    "nodemon": "^1.18.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/calypsobronte/todoList.git"
+  },
+  "keywords": [
+    "platzi",
+    "react",
+    "JS",
+    "grinch",
+    "dev",
+    "coder"
+  ],
+  "author": "Calypso Bronte",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/calypsobronte/todoList/issues"
+  },
+  "homepage": "https://github.com/calypsobronte/todoList#readme"
 }

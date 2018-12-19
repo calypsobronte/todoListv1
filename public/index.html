@@ -1,10 +1,198 @@
 <html>
   <head>
     <style>
-      .boton-azul {
-        color: blue;
-      }
+      * {
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+html, body {
+	background:#f7f1f1;
+	font-size:1.1rem;
+	font-family:'Quicksand', sans-serif;
+	height:100%;
+}
+@keyframes strikeitem {
+	to { width:calc(100% + 1rem); }
+}
+
+#todolist {
+	margin:4rem auto;
+	padding:2rem 3rem 3rem;
+	max-width:500px;
+	background:#FF6666;
+	color:#FFF;
+	box-shadow:-20px -20px 0px 0px rgba(100,100,100,.1);
+}
+#todolist h1 {
+    /*text-align:center;*/
+    font-weight:normal;
+    font-size:2.6rem;
+    letter-spacing:0.05em;
+    border-bottom:1px solid rgba(255,255,255,.3); 
+}
+#todolist h1 span {
+	display:block;
+	font-size:0.8rem;
+	margin-bottom:0.7rem;
+	margin-left:3px;
+	margin-top:0.2rem;   
+}
+
+#todolist .emptylist {
+	margin-top:2.6rem;
+	text-align:center;
+	letter-spacing:.05em;
+	font-style:italic;
+	opacity:0.8;
+	
+}
+#todolist ul {
+	margin-top:2.6rem;
+	list-style:none;
+}
+#todolist .todolist-move {
+	transition: transform 1s;
+}
+#todolist li {
+	display:flex;
+	margin:0 -3rem 4px;
+	padding:1.1rem 3rem;
+	justify-content:space-between;
+	align-items:center;
+	background:rgba(255,255,255,0.1);
+}
+
+#todolist .actions {
+	flex-shrink:0;
+	padding-left:0.7em;
+}
+#todolist .label {
+	position:relative;
+	transition:opacity .2s linear;
+}
+#todolist .done .label {
+	opacity:.6;
+}
+#todolist .done .label:before {
+	content:'';
+	position:absolute;
+	top:50%;
+	left:-.5rem;
+	display:block;
+	width:0%;
+	height:1px;
+	background:#FFF;
+	animation:strikeitem .3s ease-out 0s forwards;
+}
+#todolist .btn-picto {
+	border:none;
+	background:none;
+	-webkit-appearance:none;
+	cursor:pointer;
+	color:#FFF;
+}
+
+
+/* FORM */
+form {
+	margin-top:3rem;
+	display:flex;
+	flex-wrap:wrap;
+}
+form label {
+	min-width:100%;
+	margin-bottom:.5rem;
+	font-size:1.3rem;
+}
+form input {
+	flex-grow:1;
+	border:none;
+	background:#f7f1f1;
+	padding:0 1.5em;
+	font-size:initial;
+}
+form button {
+	padding:0 1.3rem;
+	border:none;
+	background:#FF6666;
+	color:white;
+	text-transform:uppercase;
+	font-weight:bold;
+	border:1px solid rgba(255,255,255,.3);
+	margin-left:5px;
+	cursor:pointer;
+	transition:background .2s ease-out;
+}
+form button:hover {
+	background:#FF5E5E;
+}
+form input, 
+form button {
+	font-family:'Quicksand', sans-serif;
+	height:3rem;
+}
+
+
+/* TOOGLE COMPONENT */
+.togglebutton-wrapper {
+	margin-top:1em;
+}
+.togglebutton-wrapper label {
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+}
+.togglebutton-wrapper input {
+	position:absolute;
+    left:-9999px;
+}
+.togglebutton-wrapper .togglebutton-label {
+	font-size:.8rem;
+	letter-spacing:.1em
+}
+.togglebutton-wrapper .tooglebutton-box {
+	position:relative;
+	display:block;
+	margin-left:0.6em;
+	width:38px;
+	height:22px;
+	background:white;
+	/*border:1px solid black;*/
+	border-radius:999px;
+	cursor:pointer;
+}
+.togglebutton-wrapper .tooglebutton-box:before {
+	content:'';
+	position:absolute;
+	top:2px; left:2px;
+	display:block;
+	width:18px; height:18px;
+	/*border:1px solid #FF6666;*/
+	border-radius:50%;
+	background:#FF6666;
+	opacity:0.7;
+	transition:	all .2s ease-in-out;
+}
+.togglebutton-wrapper.togglebutton-focus .tooglebutton-box {
+	box-shadow:0px 0px 0px 3px rgba(0,0,0,0.1);
+}
+.togglebutton-wrapper.togglebutton-checked .tooglebutton-box:before {
+	left:calc(100% - 4px - 16px);
+	opacity:1;
+}
+
+.put{
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+  
     </style>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
     <div id="app"></div>
@@ -19,134 +207,99 @@
     <!-- script de babel para poder usar JSX en la siguiente línea -->
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 
-    <script type="text/babel">
-      const app = document.getElementById('app');
-      const Button = () => <button>hola soy un botón</button>;
-
-      class Lista extends React.Component {
-        state = {
-          frases: [],
-          nuevaFrase: '',
-          index: null
+    <script type="text/babel">class TodoListComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          todos: [],
+          currentTodo: ''
         };
-
-        componentDidMount() {
-          this.traerFrases();
-        }
-
-        traerFrases() {
-          fetch('/frases')
-            .then(function(response) {
-              return response.json();
-            })
-            .then(frases => {
-              this.setState({ frases: frases });
-            });
-        }
-
-        eliminarFrase(index) {
-          fetch(`/frases/${index}`, { method: 'delete' }).then(() => {
-            let frases = this.state.frases;
-            frases = frases.filter((frase, index2) => index2 !== index);
-            this.setState({ frases: frases });
-          });
-        }
-
-        manejadorTexto = e => {
-          this.setState({ nuevaFrase: e.target.value });
-        };
-
-        crearFrase = () => {
-          if (this.state.nuevaFrase.length > 0) {
-            fetch(`/frases`, {
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-              },
-              method: 'post',
-              body: JSON.stringify({ frase: this.state.nuevaFrase })
-            })
-              .then(response => {
-                return response.json();
-              })
-              .then(frase => {
-                let frases = [...this.state.frases];
-                frases.push(frase.frase);
-                this.setState({ frases: frases });
-              });
-          } else {
-            alert('nueva frase vacía');
-          }
-        };
-
-        actualizarFrase = () => {
-          if (this.state.nuevaFrase.length > 0 && this.state.index !== null) {
-            fetch(`/frases/${this.state.index}`, {
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-              },
-              method: 'put',
-              body: JSON.stringify({ frase: this.state.nuevaFrase })
-            })
-              .then(response => {
-                return response.json();
-              })
-              .then(frase => {
-                let frases = [...this.state.frases];
-                frases[this.state.index] = frase;
-                this.setState({ frases: frases });
-              });
-          } else {
-            alert('nueva frase vacía');
-          }
-        };
-
-        fraseParaActualizar(index, frase) {
-          this.setState({
-            index: index,
-            nuevaFrase: frase
-          });
-        }
-
-        render() {
-          return (
-            <div>
-              <div>
-                <input
-                  type="text"
-                  onChange={this.manejadorTexto}
-                  value={this.state.nuevaFrase}
-                />
-                <button
-                  onClick={() =>
-                    this.state.index !== null
-                      ? this.actualizarFrase()
-                      : this.crearFrase()
-                  }
-                >
-                  guardar
-                </button>
-              </div>
-              {this.state.frases.map((frase, index) => (
-                <div key={`frase-${index}`}>
-                  {frase}{' '}
-                  <button
-                    onClick={() => this.fraseParaActualizar(index, frase)}
-                  >
-                    actualizar
-                  </button>{' '}
-                  <button onClick={() => this.eliminarFrase(index)}>
-                    eliminar
-                  </button>{' '}
-                </div>
-              ))}
-            </div>
-          );
-        }
       }
-
-      ReactDOM.render(<Lista />, app);
+      
+      handleTodoChange = (evt) => {
+        this.setState({
+          currentTodo: evt.target.value
+        })
+      };
+      
+      handleRemoveItem = (index) => {    
+        this.setState({
+          todos: [
+            ...this.state.todos.slice(0, index),
+            ...this.state.todos.slice(index + 1)       
+          ]
+        });
+      }
+      
+      handleAddItem = (evt) => {
+        evt.preventDefault();
+        const text = this.refInput.value;
+        if (text) {
+          this.setState({
+            todos: [
+              ...this.state.todos,
+              text
+            ]
+          }, () => {
+            this.refInput.value = '';
+          });
+        }
+      };
+      
+      renderTodos = () => {
+        return this.state.todos.map((todo, index) => {
+          return this.renderTodo(todo, index);
+        });
+      };
+    
+      renderTodo = (todo, index) => {    
+        return (
+      <div class="todolist">
+          <li key={index}>
+            &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 
+            <input type="checkbox" className="put"/>
+            &nbsp; &nbsp;&nbsp;
+            {todo} &nbsp; &nbsp;
+            <button class="btn-picto" onClick={this.handleRemoveItem.bind(this, index)}><i aria-hidden="true" class="material-icons">delete</i>
+            </button>
+          </li>
+          </div>
+        );
+      };
+      
+      isButtonDisabled = () => {
+        return !this.state.currentTodo;
+      };
+    
+      render() {    
+        return (
+          <div className="todolist">
+            <form className="FORM" ref={(ref) => { this.refForm = ref; }} onSubmit={this.handleAddItem}>
+              <input
+                ref={(ref) => { this.refInput = ref; }}
+                type="text" size="35" placeholder="Ingresa tu nueva lista de tareas"
+                className="todolist"
+                onChange={this.handleTodoChange} />
+              <button type="submit" disabled={this.isButtonDisabled()}>Agregar</button>
+            </form>
+            <ul className="todolist">
+              {this.renderTodos()}
+              &nbsp;
+            </ul>
+          </div>
+        )
+      }
+    }
+    
+    const container = document.getElementsByClassName('todo-list-container')[0];
+    ReactDOM.render(<TodoListComponent />, container);
     </script>
+    <h1>
+      Todo List
+      <span>🤓 👩‍💻 🦄 🔻</span>
+    </h1>
+    <div class="todo-list-container">
+
+    </div>
   </body>
 </html>
