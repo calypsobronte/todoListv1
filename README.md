@@ -2,6 +2,7 @@
 Tecnologías: 
 * React 
 * CSS
+
 Correr el proyecto:
 * npm i
 * npm run start
